@@ -1,13 +1,14 @@
 addon.name = 'Snorega';
 addon.author = 'Afoofa';
-addon.version = '1.0.1';
+addon.version = '1.0.2';
 addon.desc = 'RDM sleep-cycle and BLM nuke timing assistant for HorizonXI.';
 addon.link = 'https://github.com/ohgosh405-debug/Snorega';
 
 -- Compliance design: this addon is display-only. It observes local game state
 -- and incoming action packets, then presents timing guidance. It does not cast,
--- target, move, equip gear, send chat, inject packets, or queue game commands.
--- Player decisions and inputs remain required for every in-game action.
+-- target, move, equip gear, send chat, inject packets, or queue gameplay
+-- commands. The player-only /sn unload command queues Ashita's local addon
+-- unload command; it cannot perform an in-game action.
 
 require('common');
 
@@ -512,6 +513,7 @@ local function print_help()
     chat('/sn start [seconds]  - manually start a sleep cycle (default 60)');
     chat('/sn nuke             - manually mark the NUKE call now');
     chat('/sn reset            - clear the current cycle');
+    chat('/sn unload           - unload Snorega and remove the panel');
     chat('/sn delay <seconds>  - set BLM-start to Sleepga-start delay (default 5.5)');
     chat('/sn duration <secs>  - set the default sleep duration');
     chat('/sn add <name>       - force-track a BLM name; /sn remove <name>');
@@ -569,7 +571,7 @@ ashita.events.register('load', 'snorega_load', function()
             end
         end
     end);
-    chat('Snorega v1.0.1 loaded - Created by Afoofa.');
+    chat('Snorega v1.0.2 loaded - Created by Afoofa.');
     chat('Sleepga completions start the 60s cycle automatically. /sn help');
 end);
 
@@ -639,6 +641,15 @@ ashita.events.register('command', 'snorega_command', function(e)
         start_cycle(tonumber(args[3]) or sw.config.sleep_duration);
     elseif (command == 'nuke') then
         start_nuke_call(now());
+    elseif (command == 'unload') then
+        chat('Unloading Snorega.');
+        local font_keys = T{'font', 'info_font', 'timer_font', 'action_font', 'hint_font'};
+        for _, key in ipairs(font_keys) do
+            if (sw[key] ~= nil) then
+                sw[key].visible = false;
+            end
+        end
+        AshitaCore:GetChatManager():QueueCommand(-1, '/addon unload Snorega');
     elseif (command == 'reset') then
         clear_timing(false);
         chat('Cycle cleared.');

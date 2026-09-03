@@ -6,7 +6,7 @@ Snorega is an advisory RDM timing addon for coordinated BLM AoE camps. It
 tracks your Sleepga cycle, watches party/alliance BLMs begin elemental nukes,
 and shows exactly when you should **begin casting** the next Sleepga.
 
-Version 1.0.1 uses a compact five-row color panel. Cyan shows normal timing,
+Version 1.0.2 uses a compact five-row color panel. Cyan shows normal timing,
 green means ready/casting, yellow and orange signal an approaching action, and
 the `CAST SLEEPGA NOW` instruction flashes red and yellow. Drag the cyan title
 bar to move the complete panel.
@@ -25,7 +25,9 @@ Snorega is deliberately advisory and display-only:
 - It reads local party, buff, resource, and incoming action-packet data.
 - It calculates timers and displays local visual/text reminders.
 - It never casts a spell, selects or changes a target, moves the character,
-  equips gear, sends party chat, injects packets, or queues game commands.
+  equips gear, sends party chat, injects packets, or queues gameplay commands.
+- `/sn unload` queues only Ashita's local `/addon unload Snorega` management
+  command, directly in response to the player's command.
 - Every in-game action must originate from the player's own input.
 - It does not claim to be approved merely because its source is public.
 
@@ -81,6 +83,7 @@ If the addon is loaded in the middle of a pull, `/sn start` starts a fresh
 | `/sn start [seconds]` | Manually starts the sleep timer. |
 | `/sn nuke` | Marks the NUKE call now and begins the 5.5s calculation. |
 | `/sn reset` | Clears the current cycle. |
+| `/sn unload` | Unloads Snorega and immediately removes its panel. |
 | `/sn delay 5.5` | Changes BLM-start/NUKE-to-Sleepga-start delay. |
 | `/sn duration 60` | Changes the default Sleepga duration. |
 | `/sn add Name` | Tracks a named caster even if alliance job data is unavailable. |

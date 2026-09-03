@@ -1,6 +1,6 @@
 # Snorega HorizonXI compliance review
 
-**Build reviewed:** 1.0.1  
+**Build reviewed:** 1.0.2  
 **Review date:** 2026-09-03  
 **Creator:** Afoofa  
 **Public source:** <https://github.com/ohgosh405-debug/Snorega>
@@ -22,7 +22,7 @@ at staff discretion:
 | Area | Snorega behavior |
 | --- | --- |
 | Player actions | None. The addon never casts, targets, moves, equips, trades, claims, or interacts. |
-| Commands | `/sn` commands only change Snorega's timer/display configuration and are initiated by the player. |
+| Commands | `/sn` commands change Snorega's timer/display configuration and are initiated by the player. `/sn unload` queues only Ashita's local addon-unload command. |
 | Packets | Reads incoming `0x028` action packets; never injects, modifies, blocks, or sends packets. |
 | Chat | Prints status messages locally; never sends party, linkshell, tell, shout, or yell messages. |
 | Automation | None. All game actions require direct player input. |
@@ -34,7 +34,7 @@ at staff discretion:
 ## Source-level safeguards
 
 - No outgoing-packet event or injection API.
-- No queued game commands or command-manager calls.
+- No queued gameplay commands. `/sn unload` queues only `/addon unload Snorega`, directly in response to player input.
 - No simulated keyboard/controller input.
 - No automatic equipment changes.
 - No automatic party communication.
