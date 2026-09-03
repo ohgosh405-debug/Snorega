@@ -6,17 +6,33 @@ Snorega is an advisory RDM timing addon for coordinated BLM AoE camps. It
 tracks your Sleepga cycle, watches party/alliance BLMs begin elemental nukes,
 and shows exactly when you should **begin casting** the next Sleepga.
 
-Version 1.0 uses a compact five-row color panel. Cyan shows normal timing,
+Version 1.0.1 uses a compact five-row color panel. Cyan shows normal timing,
 green means ready/casting, yellow and orange signal an approaching action, and
 the `CAST SLEEPGA NOW` instruction flashes red and yellow. Drag the cyan title
 bar to move the complete panel.
 
 It never casts a spell, changes your target, or sends party chat automatically.
 
-> **HorizonXI approval required:** HorizonXI's current rules prohibit addons
-> that are not on its approved list. Do not load Snorega on HorizonXI unless
-> HorizonXI staff approve it first. Submit the source folder for review and
-> check the current rules at <https://horizonxi.com/rules>.
+> **Approval status: pending. Do not load or use Snorega on HorizonXI yet.**
+> HorizonXI prohibits every addon that is not on its approved list. Public
+> source is required for review, but publication and submission do not equal
+> approval. Wait until HorizonXI staff explicitly approve and list this addon.
+
+## HorizonXI compliance design
+
+Snorega is deliberately advisory and display-only:
+
+- It reads local party, buff, resource, and incoming action-packet data.
+- It calculates timers and displays local visual/text reminders.
+- It never casts a spell, selects or changes a target, moves the character,
+  equips gear, sends party chat, injects packets, or queues game commands.
+- Every in-game action must originate from the player's own input.
+- It does not claim to be approved merely because its source is public.
+
+See [COMPLIANCE.md](COMPLIANCE.md) for the source audit and policy mapping.
+HorizonXI staff retain sole discretion to approve or reject the addon. Any
+future functional modification should be published and submitted for review
+before that modified build is used.
 
 ## Default timing
 

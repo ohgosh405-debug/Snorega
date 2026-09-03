@@ -1,8 +1,13 @@
 addon.name = 'Snorega';
 addon.author = 'Afoofa';
-addon.version = '1.0.0';
+addon.version = '1.0.1';
 addon.desc = 'RDM sleep-cycle and BLM nuke timing assistant for HorizonXI.';
-addon.link = '';
+addon.link = 'https://github.com/ohgosh405-debug/Snorega';
+
+-- Compliance design: this addon is display-only. It observes local game state
+-- and incoming action packets, then presents timing guidance. It does not cast,
+-- target, move, equip gear, send chat, inject packets, or queue game commands.
+-- Player decisions and inputs remain required for every in-game action.
 
 require('common');
 
@@ -564,7 +569,7 @@ ashita.events.register('load', 'snorega_load', function()
             end
         end
     end);
-    chat('Snorega v1.0.0 loaded - Created by Afoofa.');
+    chat('Snorega v1.0.1 loaded - Created by Afoofa.');
     chat('Sleepga completions start the 60s cycle automatically. /sn help');
 end);
 
