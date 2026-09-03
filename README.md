@@ -1,12 +1,12 @@
-# SleepWatch for HorizonXI (Ashita v4)
+# Snorega for HorizonXI (Ashita v4)
 
 **Created by Afoofa**
 
-SleepWatch is an advisory RDM timing addon for coordinated BLM AoE camps. It
+Snorega is an advisory RDM timing addon for coordinated BLM AoE camps. It
 tracks your Sleepga cycle, watches party/alliance BLMs begin elemental nukes,
 and shows exactly when you should **begin casting** the next Sleepga.
 
-Version 1.1 uses a compact five-row color panel. Cyan shows normal timing,
+Version 2.0 uses a compact five-row color panel. Cyan shows normal timing,
 green means ready/casting, yellow and orange signal an approaching action, and
 the `CAST SLEEPGA NOW` instruction flashes red and yellow. Drag the cyan title
 bar to move the complete panel.
@@ -14,7 +14,7 @@ bar to move the complete panel.
 It never casts a spell, changes your target, or sends party chat automatically.
 
 > **HorizonXI approval required:** HorizonXI's current rules prohibit addons
-> that are not on its approved list. Do not load SleepWatch on HorizonXI unless
+> that are not on its approved list. Do not load Snorega on HorizonXI unless
 > HorizonXI staff approve it first. Submit the source folder for review and
 > check the current rules at <https://horizonxi.com/rules>.
 
@@ -35,16 +35,16 @@ and the actual BLM spell can still require RDM judgment.
 
 ## Install
 
-1. Extract the `SleepWatch` folder into:
+1. Extract the `Snorega` folder into:
    `HorizonXI\Game\addons\`
 2. In game, run:
-   `/addon load SleepWatch`
+   `/addon load Snorega`
 3. Move the overlay by dragging it.
 
 To load it every launch, add this line to the Ashita boot configuration:
 
 ```text
-/addon load SleepWatch
+/addon load Snorega
 ```
 
 ## Normal use
@@ -55,23 +55,23 @@ To load it every launch, add this line to the Ashita boot configuration:
 4. Watch `BEGIN SLEEPGA IN` after the BLMs start casting.
 5. Begin Sleepga when the overlay says `CAST SLEEPGA NOW`.
 
-If the addon is loaded in the middle of a pull, `/sw start` starts a fresh
-60-second timer. `/sw nuke` marks a manual nuke call immediately.
+If the addon is loaded in the middle of a pull, `/sn start` starts a fresh
+60-second timer. `/sn nuke` marks a manual nuke call immediately.
 
 ## Commands
 
 | Command | Purpose |
 | --- | --- |
-| `/sw start [seconds]` | Manually starts the sleep timer. |
-| `/sw nuke` | Marks the NUKE call now and begins the 5.5s calculation. |
-| `/sw reset` | Clears the current cycle. |
-| `/sw delay 5.5` | Changes BLM-start/NUKE-to-Sleepga-start delay. |
-| `/sw duration 60` | Changes the default Sleepga duration. |
-| `/sw add Name` | Tracks a named caster even if alliance job data is unavailable. |
-| `/sw remove Name` | Removes a manually tracked caster. |
-| `/sw blms` | Lists detected and manually configured BLMs. |
-| `/sw on` / `/sw off` | Enables or disables monitoring. |
-| `/sw help` | Prints the command list. |
+| `/sn start [seconds]` | Manually starts the sleep timer. |
+| `/sn nuke` | Marks the NUKE call now and begins the 5.5s calculation. |
+| `/sn reset` | Clears the current cycle. |
+| `/sn delay 5.5` | Changes BLM-start/NUKE-to-Sleepga-start delay. |
+| `/sn duration 60` | Changes the default Sleepga duration. |
+| `/sn add Name` | Tracks a named caster even if alliance job data is unavailable. |
+| `/sn remove Name` | Removes a manually tracked caster. |
+| `/sn blms` | Lists detected and manually configured BLMs. |
+| `/sn on` / `/sn off` | Enables or disables monitoring. |
+| `/sn help` | Prints the command list. |
 
 ## Detection details
 
@@ -88,9 +88,11 @@ If the addon is loaded in the middle of a pull, `/sw start` starts a fresh
 
 Before relying on it in a live pull, test once in a safe party:
 
-1. Run `/sw start 45`.
+1. Run `/sn start 45`.
 2. Confirm the countdown begins after about 5 seconds and the NUKE alert
    follows 3 seconds later.
 3. At the NUKE alert, have a BLM cast an elemental spell and confirm their
    name/spell appears.
-4. If the BLM is not detected, run `/sw add TheirName` and retest.
+4. If the BLM is not detected, run `/sn add TheirName` and retest.
+
+The older `/ns`, `/nukeandsnooze`, `/sw`, and `/sleepwatch` commands remain available as compatibility aliases.
