@@ -6,7 +6,7 @@ Snorega is an advisory RDM timing addon for coordinated BLM AoE camps. It
 tracks your Sleepga cycle, watches party/alliance BLMs begin elemental nukes,
 and shows exactly when you should **begin casting** the next Sleepga.
 
-Version 2.0 uses a compact five-row color panel. Cyan shows normal timing,
+Version 1.0 uses a compact five-row color panel. Cyan shows normal timing,
 green means ready/casting, yellow and orange signal an approaching action, and
 the `CAST SLEEPGA NOW` instruction flashes red and yellow. Drag the cyan title
 bar to move the complete panel.
