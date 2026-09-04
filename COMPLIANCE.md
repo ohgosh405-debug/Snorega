@@ -1,67 +1,70 @@
-# Snorega HorizonXI compliance review
+# Snorega v1.0.3 — HorizonXI Staff Review Notes
 
-**Build reviewed:** 1.0.2  
-**Review date:** 2026-09-03  
-**Creator:** Afoofa  
-**Public source:** <https://github.com/ohgosh405-debug/Snorega>
+## Reason for this revision
 
-## Approval status
+The earlier design automatically observed successful Sleepga completions and
+party/alliance BLM spell starts. HorizonXI staff explained that this went too
+far by removing player skill requirements.
 
-Pending HorizonXI staff review. Snorega must not be loaded or used on HorizonXI
-unless and until it appears on HorizonXI's approved addon list.
+Aerec subsequently clarified that timer addons are acceptable when the player
+starts the timer themselves. Version 1.0.3 was rewritten around that condition.
 
-HorizonXI's current rules state that unlisted addons are prohibited, custom
-addons must be publicly available before they can be approved, and approval is
-at staff discretion:
+## Player-input boundary
 
-- <https://horizonxi.com/rules>
-- <https://horizonxi.com/addons>
+Snorega remains idle until the player enters `/sn start` or `/sn nuke`. It has
+no code path that starts or modifies a timer in response to gameplay state.
+When a timer expires, it does not restart. The next cycle requires another
+player command.
 
-## Behavior audit
+## Removed functionality
 
-| Area | Snorega behavior |
-| --- | --- |
-| Player actions | None. The addon never casts, targets, moves, equips, trades, claims, or interacts. |
-| Commands | `/sn` commands change Snorega's timer/display configuration and are initiated by the player. `/sn unload` queues only Ashita's local addon-unload command. |
-| Packets | Reads incoming `0x028` action packets; never injects, modifies, blocks, or sends packets. |
-| Chat | Prints status messages locally; never sends party, linkshell, tell, shout, or yell messages. |
-| Automation | None. All game actions require direct player input. |
-| Game-state reads | Reads the player's Haste buff and party/alliance member identity/job data. |
-| Timing | Starts a display timer after the player's Sleepga completes and adjusts visual guidance when a party/alliance BLM begins a qualifying elemental spell. |
-| Targeting | Does not read, select, or change targets. The highest-HP-target line is only a static reminder. |
-| Persistence | Saves only addon settings such as enabled state, timing values, manually entered BLM names, and panel position. |
+The following functionality from the earlier design has been removed:
 
-## Source-level safeguards
+- The `packet_in` event handler.
+- Parsing of action packet `0x028`.
+- Detection of the player's Sleepga start, interruption, or completion.
+- Detection of elemental spells started by BLMs.
+- Party/alliance member and job inspection.
+- Automatic late-caster adjustment.
+- Automatic mid-pull arming.
+- Haste/buff inspection.
+- Named-caster tracking and all BLM tracking commands.
 
-- No outgoing-packet event or injection API.
-- No queued gameplay commands. `/sn unload` queues only `/addon unload Snorega`, directly in response to player input.
-- No simulated keyboard/controller input.
-- No automatic equipment changes.
-- No automatic party communication.
-- No unattended loop that performs character activity.
+## Remaining functionality
 
-## Policy mapping
+Version 1.0.3 contains only:
 
-### Rule V — Addons and Third-Party Tools
+- Player-entered addon commands.
+- A clock calculation using `os.clock()` after a manual start.
+- A draggable local text overlay.
+- Local text printed with `print()`.
+- Local settings for duration, delay, visibility, and overlay position.
+- A self-unload convenience command.
 
-The source is publicly hosted as required for a custom-addon review. Public
-hosting does not authorize use; Snorega remains prohibited until staff list it
-as approved.
+It never sends gameplay or communication commands. The sole queued command is
+`/addon unload Snorega`, used only when the player directly enters
+`/sn unload`; this affects only the addon's own loaded state.
 
-### Rule VII — Botting and Automation
+## Why the player remains responsible
 
-Snorega only observes events and displays guidance. It does not cause any game
-action. The player must decide whether and when to press a macro or enter a
-command. This is intended to preserve the rule that actions must originate from
-player input.
+The addon cannot know whether Sleepga landed, partially resisted, missed,
+expired, or was interrupted. It cannot know whether a BLM started late or
+whether the selected target is appropriate. The player must observe all of
+those conditions, decide when to start or correct the timer, select the target,
+and cast every spell.
 
-## Reviewer notes
+The display is therefore comparable to a stopwatch with configurable reminder
+marks. It reduces manual arithmetic after the player starts the stopwatch, but
+does not observe or respond to combat.
 
-The most review-sensitive feature is the automatic display adjustment after a
-party/alliance BLM begins an elemental spell. It is informational only, but
-HorizonXI staff should explicitly confirm whether that event-driven timing
-display is acceptable. If staff objects, the feature can be removed and the
-addon reduced to a fully manual countdown.
+## Staff-verifiable implementation facts
 
-This document is a good-faith technical assessment, not an approval or legal
-guarantee. HorizonXI staff make the final ruling.
+- Registered events: `load`, `command`, `d3d_present`, and `unload` only.
+- No `packet_in` or `packet_out` registration.
+- No `GetMemoryManager()` calls.
+- No resource-manager spell lookup.
+- No network, file-import, IPC, or inter-addon communication.
+- No party-chat or gameplay command queueing.
+
+Created by **Afoofa**.
+

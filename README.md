@@ -1,117 +1,100 @@
-# Snorega for HorizonXI (Ashita v4)
+# Snorega v1.0.3 for HorizonXI (Ashita v4)
 
-**Created by Afoofa**
+Snorega is a **player-started, display-only timer** created by **Afoofa** for
+Red Mages coordinating Sleepga cycles with Black Mage parties.
 
-Snorega is an advisory RDM timing addon for coordinated BLM AoE camps. It
-tracks your Sleepga cycle, watches party/alliance BLMs begin elemental nukes,
-and shows exactly when you should **begin casting** the next Sleepga.
+It does not observe the game to decide when to run. The player must start every
+timer by entering a command or pressing a macro that contains that command.
 
-Version 1.0.2 uses a compact five-row color panel. Cyan shows normal timing,
-green means ready/casting, yellow and orange signal an approaching action, and
-the `CAST SLEEPGA NOW` instruction flashes red and yellow. Drag the cyan title
-bar to move the complete panel.
+> **Approval status:** This source is being submitted to HorizonXI staff for
+> review. Do not use it on HorizonXI until staff explicitly approve this
+> version.
 
-It never casts a spell, changes your target, or sends party chat automatically.
+## What it does
 
-> **Approval status: pending. Do not load or use Snorega on HorizonXI yet.**
-> HorizonXI prohibits every addon that is not on its approved list. Public
-> source is required for review, but publication and submission do not equal
-> approval. Wait until HorizonXI staff explicitly approve and list this addon.
+After the player enters `/sn start`, Snorega:
 
-## HorizonXI compliance design
+1. Displays the remaining time locally.
+2. Shows a local `3 - 2 - 1 - NUKE` countdown at the configured points.
+3. Displays a local reminder to begin Sleepga 5.5 seconds after the timer's
+   NUKE point.
+4. Stops at the end and waits for another manual command.
 
-Snorega is deliberately advisory and display-only:
+The player may instead enter `/sn nuke` when they personally observe the real
+nuke start. This starts a new 5.5-second local countdown. The addon does not
+observe the BLM, spell, party, chat log, target, or packets.
 
-- It reads local party, buff, resource, and incoming action-packet data.
-- It calculates timers and displays local visual/text reminders.
-- It never casts a spell, selects or changes a target, moves the character,
-  equips gear, sends party chat, injects packets, or queues gameplay commands.
-- `/sn unload` queues only Ashita's local `/addon unload Snorega` management
-  command, directly in response to the player's command.
-- Every in-game action must originate from the player's own input.
-- It does not claim to be approved merely because its source is public.
+## What it does not do
 
-See [COMPLIANCE.md](COMPLIANCE.md) for the source audit and policy mapping.
-HorizonXI staff retain sole discretion to approve or reject the addon. Any
-future functional modification should be published and submitted for review
-before that modified build is used.
+Snorega does **not**:
 
-## Default timing
+- Detect Sleepga casts or completions.
+- Detect BLM casts, spell names, jobs, party members, or alliance members.
+- Read or parse incoming or outgoing action packets.
+- Start, restart, stop, or adjust a timer because of a game event.
+- Cast spells, use abilities, change targets, move the character, or equip gear.
+- Send party, alliance, linkshell, tell, say, shout, or yell messages.
+- Inject gameplay commands.
+- Choose a target or determine which mob has the highest HP.
 
-- Your successful Sleepga completion starts a 60-second cycle.
-- At 40 seconds remaining it prints `3`, then `2`, then `1`.
-- At 37 seconds remaining it prints the `NUKE` call.
-- It initially recommends beginning Sleepga 5.5 seconds after that call.
-- If a BLM begins their first elemental nuke late, the recommendation moves
-  later by the same amount (capped at 4 seconds of adjustment).
-- The overlay warns when Haste is missing and reminds you to select the
-  highest-HP mob.
+Every gameplay action and every timer start requires direct player input.
 
-These defaults implement the supplied camp instructions. They are timing
-guidance, not a guarantee: latency, spell interruption, resists, Fast Cast,
-and the actual BLM spell can still require RDM judgment.
+## Installation
 
-## Install
+1. Extract the `Snorega` folder into `HorizonXI\Game\addons\`.
+2. After approval, load it with `/addon load Snorega`.
+3. Drag the overlay to the desired screen position.
 
-1. Extract the `Snorega` folder into:
-   `HorizonXI\Game\addons\`
-2. In game, run:
-   `/addon load Snorega`
-3. Move the overlay by dragging it.
+## Recommended macro
 
-To load it every launch, add this line to the Ashita boot configuration:
+Start the timer manually after confirming that Sleepga landed:
 
 ```text
-/addon load Snorega
+/console /sn start
 ```
 
-## Normal use
+If `/console` is not required by your macro setup, use:
 
-1. Haste yourself.
-2. Cast Sleepga normally. The timer begins when the successful cast completes.
-3. Follow the `3 - 2 - 1 - NUKE` alerts.
-4. Watch `BEGIN SLEEPGA IN` after the BLMs start casting.
-5. Begin Sleepga when the overlay says `CAST SLEEPGA NOW`.
+```text
+/sn start
+```
 
-If the addon is loaded in the middle of a pull, `/sn start` starts a fresh
-60-second timer. `/sn nuke` marks a manual nuke call immediately.
+This macro does not cast Sleepga. Casting and starting the timer are separate
+player actions.
 
 ## Commands
 
-| Command | Purpose |
+| Command | Function |
 | --- | --- |
-| `/sn start [seconds]` | Manually starts the sleep timer. |
-| `/sn nuke` | Marks the NUKE call now and begins the 5.5s calculation. |
-| `/sn reset` | Clears the current cycle. |
-| `/sn unload` | Unloads Snorega and immediately removes its panel. |
-| `/sn delay 5.5` | Changes BLM-start/NUKE-to-Sleepga-start delay. |
-| `/sn duration 60` | Changes the default Sleepga duration. |
-| `/sn add Name` | Tracks a named caster even if alliance job data is unavailable. |
-| `/sn remove Name` | Removes a manually tracked caster. |
-| `/sn blms` | Lists detected and manually configured BLMs. |
-| `/sn on` / `/sn off` | Enables or disables monitoring. |
-| `/sn help` | Prints the command list. |
+| `/sn start [seconds]` | Manually starts a timer; default is 60 seconds. |
+| `/sn nuke` | Manually starts the configured 5.5-second Sleepga countdown. |
+| `/sn stop` | Stops and clears the timer. |
+| `/sn reset` | Alias for `/sn stop`. |
+| `/sn show` | Shows the overlay. |
+| `/sn hide` | Hides the overlay without unloading. |
+| `/sn duration 60` | Changes the default timer duration. |
+| `/sn delay 5.5` | Changes the manual nuke-to-Sleepga delay. |
+| `/sn unload` | Unloads the addon and removes the overlay. |
+| `/sn help` | Prints the command list locally. |
 
-## Detection details
+## Default timing
 
-- BLM casts are read from incoming action packets, so chat filters do not
-  affect detection.
-- Only party/alliance members whose main job is BLM are automatically tracked.
-- Fire, Blizzard, Aero, Stone, Thunder, Water, -ga lines, and the six classic
-  ancient-magic nukes are accepted. Stun, Drain, Aspir, cures, and buffs do not
-  shift the sleep timing.
-- Only each BLM's first qualifying nuke in a cycle is used. This prevents a
-  later second spell from incorrectly moving the Sleepga recommendation.
+- Sleep timer: 60 seconds.
+- Countdown begins: 40 seconds remaining.
+- NUKE reminder: 37 seconds remaining.
+- Sleepga reminder: 5.5 seconds after the NUKE reminder.
 
-## First-run check
+These values are advisory. Resists, latency, interruptions, Fast Cast, player
+reaction, and party timing can change what is safe. The player remains
+responsible for observing the fight and deciding when to act.
 
-Before relying on it in a live pull, test once in a safe party:
+## Privacy and network use
 
-1. Run `/sn start 45`.
-2. Confirm the countdown begins after about 5 seconds and the NUKE alert
-   follows 3 seconds later.
-3. At the NUKE alert, have a BLM cast an elemental spell and confirm their
-   name/spell appears.
-4. If the BLM is not detected, run `/sn add TheirName` and retest.
+Snorega makes no web requests and collects, stores, or transmits no character,
+account, party, combat, or chat information. Its settings file contains only
+timer values, overlay visibility, and overlay position.
 
-The older `/ns`, `/nukeandsnooze`, `/sw`, and `/sleepwatch` commands remain available as compatibility aliases.
+## Credits
+
+Created by **Afoofa**.
+
